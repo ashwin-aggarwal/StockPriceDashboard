@@ -157,5 +157,4 @@ Built as a coding challenge submission - January 2026
 - [Vercel](https://vercel.com) for seamless deployment
 
 ---
-
 ⭐ If you found this helpful, please consider starring the repo!
