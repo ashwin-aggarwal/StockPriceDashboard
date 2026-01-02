@@ -146,7 +146,8 @@ MIT License - feel free to use this project for learning or portfolio purposes.
 
 ## 👨‍💻 Author
 
-Built as a coding challenge submission - January 2026
+Ashwin Aggarwal
+Cornell Engineering Student
 
 ## 🙏 Acknowledgments
 
