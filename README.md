@@ -146,9 +146,9 @@ MIT License - feel free to use this project for learning or portfolio purposes.
 
 ## 👨‍💻 Author
 
-Ashwin Aggarwal
+Ashwin Aggarwal 
 Cornell Engineering Student
-
+Linkedin: https://www.linkedin.com/in/ashwin-aggarwal/
 ## 🙏 Acknowledgments
 
 - [Finnhub](https://finnhub.io) for the free stock API
