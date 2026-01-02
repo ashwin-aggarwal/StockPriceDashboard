@@ -1,5 +1,4 @@
 import React from 'react';
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
 import { formatPrice, formatPercent, getTimeAgo } from '../utils/formatters';
 
 export default function StockTile({ 
@@ -16,26 +15,22 @@ export default function StockTile({
   if (!stock) return null;
 
   const isPositive = stock.quote && stock.quote.dp >= 0;
-  const sparklineData = stock.candles?.c?.map((price, idx) => ({
-    price,
-    time: stock.candles.t[idx],
-  })) || [];
 
   return (
     <div className="stock-tile bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-5 relative overflow-hidden hover:border-slate-600/50 hover:shadow-xl hover:shadow-cyan-500/10 transition-all hover:-translate-y-1">
       <div className="bg-noise absolute inset-0 pointer-events-none" />
       
       {/* Edit Button */}
-{!isEditing && (
-  <button
-    onClick={(e) => {
-      e.stopPropagation();
-      e.preventDefault();
-      onEdit();
-    }}
-    className="absolute top-4 right-4 w-7 h-7 bg-slate-700/50 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all z-20"
-    title="Edit ticker"
-  >
+      {!isEditing && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            onEdit();
+          }}
+          className="absolute top-4 right-4 w-7 h-7 bg-slate-700/50 hover:bg-slate-700 rounded-lg flex items-center justify-center transition-all z-20"
+          title="Edit ticker"
+        >
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
           </svg>
@@ -116,10 +111,16 @@ export default function StockTile({
           <p className="text-sm text-red-400">Failed to load</p>
         </div>
       ) : stock.quote ? (
-        <div className="relative z-10 cursor-pointer" onClick={onTileClick}>
+        <div 
+          className="relative z-10 cursor-pointer" 
+          onClick={(e) => {
+            if (e.target.closest('button')) return;
+            onTileClick();
+          }}
+        >
           {/* Header */}
           <div className="flex items-start justify-between mb-4">
-            <div>
+            <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <h3 className="text-lg font-bold">{stock.symbol}</h3>
                 {stock.profile?.logo && (
@@ -132,39 +133,33 @@ export default function StockTile({
             </div>
           </div>
 
-          {/* Price */}
-          <div className="mb-3">
-            <div className="text-2xl font-bold mono">{formatPrice(stock.quote.c)}</div>
-            <div className={`text-sm font-medium ${isPositive ? 'text-green-400' : 'text-red-400'} flex items-center gap-1`}>
-              <svg className={`w-3 h-3 ${isPositive ? '' : 'rotate-180'}`} fill="currentColor" viewBox="0 0 20 20">
+          {/* Price Section - Larger and centered */}
+          <div className="mb-4 text-center py-6">
+            <div className="text-3xl font-bold mono mb-2">{formatPrice(stock.quote.c)}</div>
+            <div className={`text-lg font-medium ${isPositive ? 'text-green-400' : 'text-red-400'} flex items-center justify-center gap-2`}>
+              <svg className={`w-5 h-5 ${isPositive ? '' : 'rotate-180'}`} fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
               </svg>
               {formatPercent(stock.quote.dp)}
             </div>
           </div>
 
-          {/* Sparkline */}
-          {sparklineData.length > 0 && (
-            <div className="h-12 -mx-2">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={sparklineData}>
-                  <Line
-                    type="monotone"
-                    dataKey="price"
-                    stroke={isPositive ? '#34d399' : '#f87171'}
-                    strokeWidth={2}
-                    dot={false}
-                    isAnimationActive={false}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="bg-slate-900/30 rounded-lg p-3">
+              <div className="text-xs text-slate-400 mb-1">High</div>
+              <div className="text-sm font-semibold mono">{formatPrice(stock.quote.h)}</div>
             </div>
-          )}
+            <div className="bg-slate-900/30 rounded-lg p-3">
+              <div className="text-xs text-slate-400 mb-1">Low</div>
+              <div className="text-sm font-semibold mono">{formatPrice(stock.quote.l)}</div>
+            </div>
+          </div>
 
           {/* Footer */}
-          <div className="mt-3 pt-3 border-t border-slate-700/50 flex items-center justify-between text-xs text-slate-500">
+          <div className="pt-3 border-t border-slate-700/50 flex items-center justify-between text-xs text-slate-500">
             <span>{getTimeAgo(stock.lastUpdated)}</span>
-            <span className="text-cyan-400">View details →</span>
+            <span className="text-cyan-400 font-medium">View chart →</span>
           </div>
         </div>
       ) : null}

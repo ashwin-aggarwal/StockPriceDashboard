@@ -47,7 +47,8 @@ export default function ApiKeyInput({ onApiKeySubmit }) {
           
           <button
             onClick={handleSubmit}
-            className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-xl hover:from-cyan-600 hover:to-blue-700 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+            disabled={!inputValue.trim()}
+            className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold rounded-xl hover:from-cyan-600 hover:to-blue-700 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Connect
           </button>

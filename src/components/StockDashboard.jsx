@@ -4,7 +4,7 @@ import Header from './Header';
 import StockGrid from './StockGrid';
 import StockTable from './StockTable';
 import StockDetailModal from './StockDetailModal';
-import { fetchQuote, fetchProfile, fetchCandles } from '../utils/api';
+import { fetchQuote, fetchProfile } from '../utils/api';
 
 const DEFAULT_TICKERS = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'NVDA'];
 
@@ -16,7 +16,6 @@ export default function StockDashboard() {
   });
   const [stocksData, setStocksData] = useState({});
   const [selectedStock, setSelectedStock] = useState(null);
-  const [selectedRange, setSelectedRange] = useState('1D');
   const [editingTicker, setEditingTicker] = useState(null);
   const [newTickerValue, setNewTickerValue] = useState('');
   const [validationState, setValidationState] = useState('idle');
@@ -49,10 +48,9 @@ export default function StockDashboard() {
     }));
 
     try {
-      const [quote, profile, candles] = await Promise.all([
+      const [quote, profile] = await Promise.all([
         fetchQuote(symbol, apiKey),
         existing?.profile || fetchProfile(symbol, apiKey),
-        fetchCandles(symbol, apiKey, selectedRange),
       ]);
 
       setStocksData(prev => ({
@@ -61,7 +59,6 @@ export default function StockDashboard() {
           symbol,
           quote,
           profile,
-          candles,
           loading: false,
           error: quote ? null : 'Failed to load data',
           lastUpdated: Date.now(),
@@ -79,7 +76,7 @@ export default function StockDashboard() {
         },
       }));
     }
-  }, [apiKey, selectedRange, stocksData]);
+  }, [apiKey, stocksData]);
 
   // Refresh all stocks
   const handleRefreshAll = useCallback(async () => {
@@ -94,21 +91,6 @@ export default function StockDashboard() {
       tickers.forEach(ticker => fetchStockData(ticker));
     }
   }, [apiKey, tickers]);
-
-  // Refetch candles when range changes
-  useEffect(() => {
-    if (apiKey && selectedStock) {
-      fetchCandles(selectedStock, apiKey, selectedRange).then(candles => {
-        setStocksData(prev => ({
-          ...prev,
-          [selectedStock]: {
-            ...prev[selectedStock],
-            candles,
-          },
-        }));
-      });
-    }
-  }, [selectedRange, selectedStock, apiKey]);
 
   // Validate ticker
   const validateTicker = useCallback(async (ticker) => {
@@ -222,8 +204,6 @@ export default function StockDashboard() {
       {selectedStock && stocksData[selectedStock] && (
         <StockDetailModal
           stock={stocksData[selectedStock]}
-          selectedRange={selectedRange}
-          onRangeChange={setSelectedRange}
           onClose={() => setSelectedStock(null)}
         />
       )}
