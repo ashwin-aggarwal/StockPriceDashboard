@@ -6,12 +6,9 @@ A modern, real-time stock price dashboard built with React, TypeScript, and Tail
 
 ## 🚀 Features
 
-### Core Requirements ✅
 - **Real-time Stock Data Table** - Display symbol, price, % change with sortable columns
 - **Tailwind CSS Styling** - Fully responsive, mobile-friendly design
 - **Deployed Application** - Production-ready deployment
-
-### Bonus Features 🎁
 - **Interactive Tile-Based Watchlist** - 2×3 grid (stacked on mobile) displaying key metrics
 - **Detailed View Modal** - Click any stock to see Open→Current price visualization with axes
 - **Ticker Editing with Validation** - Edit any stock symbol with real-time API validation
